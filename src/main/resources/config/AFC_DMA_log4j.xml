@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+        <!-- Appenders -->
+        <appender name="console" class="org.apache.log4j.ConsoleAppender">
+                <layout class="org.apache.log4j.PatternLayout">
+                        <param name="ConversionPattern" value="%d %-5p [%t] - %m%n"/>
+                </layout>           
+        </appender>
+
+        <appender name="DAM_restServer_error_file" class="org.apache.log4j.RollingFileAppender">
+                <param name="File" value="./src/log/logsAFC_DAM_error.trz"></param>
+                <param name="Append" value="true"></param>
+                <param name="ImmediateFlush" value="true"></param>
+                <param name="MaxBackupIndex" value="10"/>
+                <param name="MaximumFileSize" value="500000"/>
+				<param name="Threshold" value="WARN" ></param>  
+				
+                <layout class="org.apache.log4j.PatternLayout">
+                        <param name="ConversionPattern" value="%d %-5p [%t] - %m%n"/>
+                </layout>
+        </appender>
+        
+        <appender name="warning_file" class="org.apache.log4j.RollingFileAppender">
+                <param name="File" value="./src/log/logsAFC_DAM_warning.trz"/>
+                <param name="Append" value="true"></param>
+                <param name="ImmediateFlush" value="true"></param>
+                <param name="MaxBackupIndex" value="10"></param>
+                <param name="MaximumFileSize" value="500000"/>
+				
+                <layout class="org.apache.log4j.PatternLayout">
+                        <param name="ConversionPattern" value="%d %-5p [%t] - %m%n"/>
+                </layout>
+        </appender>
+
+        <appender name="DAM_restServer_file" class="org.apache.log4j.RollingFileAppender">
+                <param name="File" value="./src/log/logsAFC_DAM_RestServer.trz"/>
+                <param name="Append" value="true"/>
+                <param name="ImmediateFlush" value="true"></param>
+                <param name="MaxBackupIndex" value="10"/>
+                <param name="MaximumFileSize" value="500000"/>
+				
+                <layout class="org.apache.log4j.PatternLayout">
+                        <param name="ConversionPattern" value="%d %-5p [%t] - %m%n"/>
+                </layout>
+        </appender>
+
+
+	<category name="afc.NRDBManager">
+		<priority value="debug" />
+		<appender-ref ref="warning_file" />
+	</category> 
+
+	<category name="xxxx">
+		<priority value="debug" />
+		<appender-ref ref="DAM_restServer_file" />
+	</category> 
+
+	 <root>
+       <priority value="debug" />
+       <appender-ref ref="console" />
+	   <appender-ref ref="DAM_restServer_error_file" />
+     </root>        
+</log4j:configuration>

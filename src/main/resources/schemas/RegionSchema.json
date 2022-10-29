@@ -1,0 +1,128 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
+  "type": "object",
+  "title": "The Root Schema",
+  "required": [
+    "componentId",
+    "sequenceNumber",
+    "region"
+  ],
+  "properties": {
+    "componentId": {
+      "$id": "#/properties/componentId",
+      "type": "string",
+      "title": "The Componentid Schema",
+      "default": "",
+      "examples": [
+        "urn:afc:AS04:cropsManagement:ROVI:IPP"
+      ],
+      "pattern": "urn:afc(:[^:]+){4}"
+    },
+    "sequenceNumber": {
+      "$id": "#/properties/sequenceNumber",
+      "type": "integer",
+      "title": "The Sequencenumber Schema",
+      "default": 0,
+      "examples": [
+        123
+      ]
+    },
+    "region": {
+      "$id": "#/properties/region",
+      "type": "object",
+      "title": "The Region Schema",
+      "required": [
+        "observedProperty",
+        "result",
+        "resultTime",
+        "locationDimension"
+      ],
+      "properties": {
+        "observedProperty": {
+          "$id": "#/properties/region/properties/observedProperty",
+          "type": "string",
+          "title": "The Observedproperty Schema",
+          "default": "",
+          "examples": [
+            "field_status"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "result": {
+          "$id": "#/properties/region/properties/result",
+          "type": "string",
+          "title": "The Result Schema",
+          "default": "",
+          "examples": [
+            "Weed"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "resultTime": {
+          "$id": "#/properties/region/properties/resultTime",
+          "type": "integer",
+          "title": "The Resulttime Schema",
+          "default": 0,
+          "examples": [
+            1558086914
+          ]
+        },
+        "locationDimension": {
+          "$id": "#/properties/region/properties/locationDimension",
+          "type": "object",
+          "title": "The Locationdimension Schema",
+          "required": [
+            "nPoints",
+            "latCoordinates",
+            "lonCoordinates"
+          ],
+          "properties": {
+            "nPoints": {
+              "$id": "#/properties/region/properties/locationDimension/properties/nPoints",
+              "type": "integer",
+              "title": "The Npoints Schema",
+              "default": 0,
+              "examples": [
+                3
+              ]
+            },
+            "latCoordinates": {
+              "$id": "#/properties/region/properties/locationDimension/properties/latCoordinates",
+              "type": "array",
+              "title": "The Latcoordinates Schema",
+              "items": {
+                "$id": "#/properties/region/properties/locationDimension/properties/latCoordinates/items",
+                "type": "number",
+                "title": "The Items Schema",
+                "default": 0.0,
+                "examples": [
+                  49.283257,
+                  49.323284,
+                  49.365784
+                ]
+              }
+            },
+            "lonCoordinates": {
+              "$id": "#/properties/region/properties/locationDimension/properties/lonCoordinates",
+              "type": "array",
+              "title": "The Loncoordinates Schema",
+              "items": {
+                "$id": "#/properties/region/properties/locationDimension/properties/lonCoordinates/items",
+                "type": "number",
+                "title": "The Items Schema",
+                "default": 0.0,
+                "examples": [
+                  -7.468417,
+                  -7.498212,
+                  -7.524837
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

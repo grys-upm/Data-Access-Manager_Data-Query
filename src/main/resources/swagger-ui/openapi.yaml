@@ -1,0 +1,2377 @@
+openapi: 3.0.1
+info:
+  title: UPM AFarCloud NRDB Data Query AS12
+  description: 'This is one of the components of the AFarCloud project. The Data Access Manager will provide a direct connection with the NoSQL Data-Base, with a previous validation of the json files received by the different providers. REST service API. It also implements different types of queries'
+  contact:
+    name: Mario San Emeterio - UPM
+    email: mario.sanemeterio@upm.es
+  version: 3.7.5
+externalDocs:
+  description: Find out more about AFarCloud
+  url: http://www.afarcloud.eu/
+servers:
+- url: http://localhost:9124/
+  description: AS12
+#- url: http://localhost:9124/
+#  description: AS12
+#- url: http://localhost:9124/
+#  description: AS12
+#- url: http://localhost:9124/
+#  description: AS12
+#- url: http://localhost:9124/
+#  description: AS12
+#- url: http://localhost:9124/
+#  description: AS12
+#- url: http://localhost:9124/
+#  description: AS12
+#- url: http://localhost:9124/
+#  description: AS12
+#- url: http://localhost:9124/
+#  description: AS12
+#- url: http://localhost:9124/
+#  description: AS12
+#- url: http://localhost:9124/
+#  description: AS12
+#- url: http://localhost:9124/
+#  description: test
+tags:
+- name: Data Query
+  description: Query data to InfluxDB
+  externalDocs:
+    description: Find out more
+    url: https://www.influxdata.com/
+paths:
+  /store/measures:
+    post:
+      tags:
+      - Store
+      summary: Add a new measure/s to the Data Base
+      operationId: addMeasures
+      requestBody:
+        description: Measure json that needs to be validated and stored in the Data Base
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: 'http://localhost:9124/dataAccessManager/openapi.yaml#/components/schemas/SimpleMeasure'
+                - $ref: 'http://localhost:9124/dataAccessManager/openapi.yaml#/components/schemas/SensorAccumulatedMeasurements' 
+                - $ref: 'http://localhost:9124/dataAccessManager/openapi.yaml#/components/schemas/AggregationMeasurementsGatewaySchema'
+                - $ref: 'http://localhost:9124/dataAccessManager/openapi.yaml#/components/schemas/VariousMfromMulti-sensor'
+            examples:
+              SimpleMeasureExample:
+                value: {
+                  "resourceId": "urn:afc:AS12:environmentalObservations:TST:airSensor:airTemperatureSensor0012",
+                    "sequenceNumber": 123,
+                    "location": {
+                      "latitude": 45.45123,
+                      "longitude": 25.25456,
+                      "altitude": 2.10789
+                    },
+                    "observedProperty": "soilTemperature",
+                    "resultTime": 1558081245,
+                    "result": {
+                      "value": 18.34,
+                      "uom": "http://qudt.org/vocab/unit/DEG_C"
+                    }
+                }
+                
+              SensorAccumulatedExample:
+                value: {
+                  "resourceId": 'urn:afc:AS12:cropsManagement:TST:soilSensor:afc_node_1',
+                  "sequenceNumber": 123,
+                  "location": {
+                    "latitude": 45.45123,
+                    "longitude": 25.25456,
+                    "altitude": 2.10789
+                  },
+                  "observedProperty": "soilTemperature",
+                  "uom": 'http://qudt.org/vocab/unit/DEG_C',
+                  "observations":
+                  [
+                    {
+                      "resultTime": 1558081245,
+                      "result":
+                      {
+                        "value": 18.34
+                      }
+                    },
+                    {
+                      "resultTime": 1558083456,
+                      "result":
+                      {
+                        "value": 17.43
+                      }
+                    },
+                    {
+                      "resultTime": 1558086914,
+                      "result":
+                      {
+                        "value": 16.56
+                      }
+                    }
+                  ]
+                }
+                
+              AggregationMeasurementsGatewayExample:
+                value: {
+                  "deviceId":"urn:afc:AS12:droneMissions:MDH:GW:drone001",
+                  "sequenceNumber":123,
+                  "location": 
+                    {
+                    "latitude": 45.45123,
+                    "longitude": 25.25456,
+                    "altitude": 2.10789
+                    },
+                  "observations":
+                    [
+                      {
+                      "resourceId":"urn:afc:AS12:environmentalObservations:TST:airSensor:airTemperatureSensor001",
+                      "observedProperty": " air_temperature",
+                      "resultTime": 1558086914,
+                      "result": 
+                        {
+                        "value": 3.2,
+                        "uom": "http://qudt.org/vocab/unit/DEG_C"
+                        }
+                      },
+                      {
+                      "resourceId":"urn:afc:AS12:environmentalObservations:TST:airSensor:airHumiditySensor001",
+                      "observedProperty": " air_humidity",
+                      "resultTime": 1558086914,
+                      "result": 
+                        {
+                        "value": 4.2,
+                        "uom": "http://qudt.org/vocab/unit/PERCENT"
+                        }
+                      },
+                      {
+                      "resourceId":"urn:afc:AS12:environmentalObservations:TST:airSensor:airPollutionSensor001", 
+                      "observedProperty": "battery", 
+                      "resultTime": 1558086914,
+                      "result": 
+                        {
+                        "value": 5.8,
+                        "uom": "http://qudt.org/vocab/unit/V"
+                        }
+                      }
+                    ]
+                  }
+                  
+              VariousMfromMultiExample:
+                value: {
+                  "resourceId":"urn:afc:AS12:cropsManagement:RISEACREO:soilSensor:afc_node_0100_5",  
+                  "sequenceNumber":123,
+                  "location": 
+                    {
+                    "latitude": 45.45123,
+                    "longitude": 25.25456,
+                    "altitude": 2.10789
+                    },
+                  "observations":
+                    [
+                      {
+                      "observedProperty": "electrical_conductivity_bulk",
+                      "resultTime": 1558086914, 
+                      "result": 
+                        {
+                        "value": 0.02,
+                        "uom": "http://qudt.org/vocab/unit/S-PER-M"
+                        }
+                      },
+                      {                   
+                      "observedProperty": "electrical_conductivity_pores",
+                      "resultTime": 1558086914,
+                      "result": 
+                        {
+                        "value": 0.1198,
+                        "uom": "http://qudt.org/vocab/unit/S-PER-M "
+                        }
+                      },
+                      {
+                      "observedProperty": "temperature_teros12",
+                      "resultTime": 1558086914,
+                      "result": 
+                        {
+                        "value": 15.7,
+                        "uom": "http://qudt.org/vocab/unit/DEG_C"
+                        }
+                      },
+                      {
+                      "observedProperty": "temperature_teros21",
+                      "resultTime": 1558086914,
+                      "result": 
+                        {
+                        "value": 16.0,
+                        "uom": "http://qudt.org/vocab/unit/DEG_C "
+                        }
+                      },
+                      {
+                      "observedProperty": "soil_matrix_potential",
+                      "resultTime": 1558086914, 
+                      "result": 
+                        {
+                        "value": -81.9,
+                        "uom": "http://qudt.org/vocab/unit/KiloPA"
+                        }
+                      }
+                    ]
+                  }
+
+        required: true
+      responses:
+        405:
+          description: "Invalid input: not AFarCloud-compliant"
+        415:
+          description: "Invalid input: not a JSON"
+        200:
+          description: "Successful Operation"
+        5XX:
+          description: "Unexpected error"
+
+      x-codegen-request-body-name: body
+
+
+#  /store/collar:
+#    post:
+#      tags:
+#      - Store
+#      summary: Add a new measure/s from a collar to the Data Base
+#      operationId: addCollar
+#      requestBody:
+#        description: Measure/s from collar json that needs to be validated and stored in the Data Base
+#        content:
+#          application/json:
+#            schema:
+#              oneOf:
+#                - $ref: 'http://localhost:9124/dataAccessManager/openapi.yaml#/components/schemas/CollarSchema'
+#                - $ref: 'http://localhost:9124/dataAccessManager/openapi.yaml#/components/schemas/CollarListSchema' 
+#            examples:
+#              CollarJsonExample:
+#                value: {
+#					
+#					  "collar": {
+#					    "resourceId": "urn:afc:AS12:collar:RISEACREO:heartRate:afc_node_0100_5",
+#					    "location": {
+#		                    "latitude": 45.45123,
+#		                    "longitude": 25.25456,
+#		                    "altitude": 2.10789
+#					    },
+#					    "resultTime": 1558086914,
+#					    "resourceAlarm": false,
+#					    "anomalies": {
+#					      "locationAnomaly": true,
+#					      "temperatureAnomaly": false,
+#					      "distanceAnomaly": false,
+#					      "activityAnomaly": false,
+#					      "positionAnomaly": false
+#					    },
+#					    "acceleration": {
+#					      "accX": 894.75,
+#					      "accY": 727.25,
+#					      "accZ": 479.1
+#					    },
+#					    "temperature": -94.5
+#					  },
+#					  "sequenceNumber": 123
+#					
+#				}
+#				
+#              CollarListJsonExample:
+#                value: {
+#				  "collars": [
+#				    {
+#				      "resourceId": "urn:afc:AS12:collar:RISEACREO:heartRate:afc_node_0100_5",
+#				      "location": {
+#				        "latitude": 45.45123,
+#		                "longitude": 25.25456,
+#		                "altitude": 2.10789
+#				      },
+#				      "resultTime": 1558086914,
+#				      "resourceAlarm": true,
+#				      "anomalies": {
+#				        "locationAnomaly": false,
+#				        "temperatureAnomaly": true,
+#				        "distanceAnomaly": false,
+#				        "activityAnomaly": true,
+#				        "positionAnomaly": false
+#				      },
+#				      "acceleration": {
+#				        "accX": 926.25,
+#				        "accY": 469.75,
+#				        "accZ": 955.75
+#				      },
+#				      "temperature": 107.25
+#				    }
+#				  ],
+#				  "sequenceNumber": 123
+#				}				
+#
+#        required: true
+#      responses:
+#        405:
+#          description: "Invalid input: not AFarCloud-compliant"
+#        415:
+#          description: "Invalid input: not a JSON"
+#        200:
+#          description: "Successful Operation"
+#        5XX:
+#          description: "Unexpected error"
+#
+#      x-codegen-request-body-name: body
+#     
+#
+#  /store/vehicle:
+#    post:
+#      tags:
+#      - Store
+#      summary: Add a new state vector from a vehicle to the Data Base
+#      operationId: addVehicle
+#      requestBody:
+#        description: Measure/s from a vehicle json that needs to be validated and stored in the Data Base
+#        content:
+#          application/json:
+#            schema:
+#              oneOf:
+#              - $ref: 'http://localhost:9124/dataAccessManager/openapi.yaml#/components/schemas/StateVectorSchema_Complete'
+#            examples:
+#              StateVector_Battery:
+#                value: {
+#                  	"vehicleId": 33,
+#                  	"sequenceNumber": 123,
+#                  	"battery": {
+#                  		"batteryCapacity": 3.2,
+#                  		"batteryPercentage": 0.5
+#                  	},
+#                  	"lastUpdate": 1588776718
+#                }
+#              StateVector_pose:
+#                value: {
+#                  	"vehicleId": 33,
+#                  	"sequenceNumber": 123,
+#                  	"location": {
+#                  		"latitude": 45.45123,
+#                  		"longitude": 25.25456,
+#                  		"altitude": 2.10789
+#                  	},
+#                  	"orientation":{
+#                  		"roll": 45.45123,
+#                  		"pitch": 25.25456,
+#                  		"yaw": 2.10789
+#                  	},
+#                  	"lastUpdate": 1588776718
+#                }
+#              StateVector:
+#                value: {
+#                  	"vehicleId": 33,
+#                  	"sequenceNumber": 123,
+#                  	"location": {
+#                  		"latitude": 45.45123,
+#                  		"longitude": 25.25456,
+#                  		"altitude": 2.10789
+#                  	},
+#                  	"orientation":{
+#                  		"roll": 45.45123,
+#                  		"pitch": 25.25456,
+#                  		"yaw": 2.10789
+#                  	},
+#                  	"battery": {
+#                  		"batteryCapacity": 3.2,
+#                  		"batteryPercentage": 0.5
+#                  	},
+#                  	"linearSpeed": 55,
+#                  	"lastUpdate": 1588776718
+#                }
+#
+#        required: true
+#      responses:
+#        405:
+#          description: "Invalid input: not AFarCloud-compliant"
+#        415:
+#          description: "Invalid input: not a JSON"
+#        200:
+#          description: "Successful Operation"
+#        5XX:
+#          description: "Unexpected error"
+#
+#      x-codegen-request-body-name: body
+      
+#
+#  /store/region:
+#    post:
+#      tags:
+#      - Store
+#      summary: Add a new measure/s from a collar to the Data Base
+#      operationId: addRegion
+#      requestBody:
+#        description: Measure/s from Region json that needs to be validated and stored in the Data Base
+#        content:
+#          application/json:
+#            schema:
+#              oneOf:
+#                - $ref: 'http://localhost:9124/dataAccessManager/openapi.yaml#/components/schemas/RegionSchema'
+#                - $ref: 'http://localhost:9124/dataAccessManager/openapi.yaml#/components/schemas/RegionListSchema' 
+#
+#            examples:
+#              RegionJsonExample:
+#                value: {
+#                  "componentId": "urn:afc:AS12:cropsManagement:ROVI:IPP", 
+#                  "sequenceNumber": 123, 
+#                  "region": { 
+#                    "observedProperty": "field_status", 
+#                    "result": "Weed", 
+#                    "resultTime": 1558086914, 
+#                    "locationDimension": { 
+#                      "nPoints": 3, 
+#                      "latCoordinates": [49.283257, 49.323284, 49.365784], 
+#                      "lonCoordinates": [-7.468417, -7.498212, -7.524837] 
+#                    } 
+#                  } 
+#                }
+#              RegionListJsonExample:
+#                value: {
+#                  "componentId": "urn:afc:AS12:cropsManagement:ROVI:IPP", 
+#                  "sequenceNumber": 123, 
+#                  "regions": [ 
+#                    { 
+#                      "observedProperty": "field_status", 
+#                      "result": "Weed", 
+#                      "resultTime": 1558086914, 
+#                      "locationDimension": { 
+#                         "nPoints": 3, 
+#                         "latCoordinates": [49.283257, 49.323284, 49.365784], 
+#                         "lonCoordinates": [-7.468417, -7.498212, -7.524837]  
+#                      }    
+#                    }, 
+#                    { 
+#                      "observedProperty": "field_status", 
+#                      "result": "DeadPlant", 
+#                      "resultTime": 1558086920, 
+#                      "locationDimension": { 
+#                         "nPoints": 3, 
+#                         "latCoordinates": [49.473257, 49.111238, 49.372852], 
+#                         "lonCoordinates": [-7.552187, -7.552328, -7.551182]    
+#                      } 
+#                    } 
+#                  ] 
+#                }
+#
+#        required: true
+#      responses:
+#        405:
+#          description: "Invalid input: not AFarCloud-compliant"
+#        415:
+#          description: "Invalid input: not a JSON"
+#        200:
+#          description: "Successful Operation"
+#        5XX:
+#          description: "Unexpected error"
+#
+#      x-codegen-request-body-name: body 
+
+
+  /getSensorTelemetry/latest/:
+    get:
+      summary: Retrieves the latest observations that meet specific filter conditions.
+      operationId: getLatestSensorTelemetry
+      tags:
+        - Query sensor telemetry
+      parameters:
+        - name: limit
+          in: query            
+          description: Number of telemetries to retrieve. Default 1, maximum 100.
+          required: true
+          schema:
+            type: integer
+          example: 10
+        - name: entityNames
+          in: query            
+          description: List (comma separated values) of sensor identifier (entityName) to retrieve.
+          required: false
+          schema:
+            type: string       
+        - name: devices
+          in: query            
+          description: List (comma separated values) of device identifier (device entityName) to retrieve.
+          required: false
+          schema:
+            type: string
+        - name: services
+          in: query
+          description: List (comma separated values) of application domain to retrieve.
+          required: false
+          schema:
+            type: string
+        - name: types
+          in: query
+          description: List (comma separated values) of the type of measurements to retrieve.
+          required: false
+          schema:
+            type: string
+        - name: providers
+          in: query
+          description: List (comma separated values) of providers to retrieve.
+          required: false
+          schema:
+            type: string
+        - name: measurements
+          in: query
+          description: List (comma separated values) of the measurements (observedProperty) to retrieve.
+          required: false
+          schema:
+            type: string         
+        - name: altitude
+          in: query
+          description: Minimum altitude of observations.
+          required: false
+          schema:
+            type: integer
+        - name: order
+          in: query
+          description: "Temporal order: ascending (ASC) or descending (DESC). Default value: DESC."
+          required: false
+          schema:
+            type: string  
+        - name: csv
+          in: query
+          description: "Results in CSV format."
+          required: false
+          schema:
+            type: boolean  
+      responses:
+        '200':
+          description: Successful Operation
+        '405':
+          description: Invalid input
+        '500':
+          description: Unexpected error          
+
+
+  /getSensorTelemetry/historic/:
+    get:
+      summary: Retrieves observations from a time interval that meet specific filter conditions. If filter conditions (other than 'altitude') are not specified, retrieves a maximum of 100 observations per measurement.
+      operationId: getHistoricSensorTelemetry
+      tags:
+        - Query sensor telemetry interval
+      parameters:
+        - name: start_time
+          in: query            
+          description: The start datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+          required: true
+          schema:
+            type: string
+          example: "2020-06-09"
+        - name: end_time
+          in: query            
+          description: The end datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+          required: false
+          schema:
+            type: string       
+        - name: entityNames
+          in: query            
+          description: List (comma separated values) of sensor identifier (entityName) to retrieve.
+          required: false
+          schema:
+            type: string
+        - name: devices
+          in: query
+          description: List (comma separated values) of device identifier (device entityName) to retrieve.
+          required: false
+          schema:
+            type: string
+        - name: services
+          in: query
+          description: List (comma separated values) of application domain to retrieve.
+          required: false
+          schema:
+            type: string
+        - name: types
+          in: query
+          description: List (comma separated values) of the type of measurements to retrieve.
+          required: false
+          schema:
+            type: string
+        - name: providers
+          in: query
+          description: List (comma separated values) of providers to retrieve.
+          required: false
+          schema:
+            type: string         
+        - name: measurements
+          in: query
+          description: List (comma separated values) of the measurements (observedProperty) to retrieve.
+          required: false
+          schema:
+            type: string
+        - name: altitude
+          in: query
+          description: Minimum altitude of observations.
+          required: false
+          schema:
+            type: integer    
+        - name: order
+          in: query
+          description: "Temporal order: ascending (ASC) or descending (DESC). Default value: DESC."
+          required: false
+          schema:
+            type: string     
+        - name: csv
+          in: query
+          description: "Results in CSV format."
+          required: false
+          schema:
+            type: boolean   
+      responses:
+        '200':
+          description: Successful Operation
+        '405':
+          description: Invalid input
+        '500':
+          description: Unexpected error      
+ 
+#  /getRegionTelemetry/latest/:
+#    get:
+#      summary: Retrieves the latest region-type observations that meet specific filter conditions.
+#      operationId: getLatestRegionTelemetry
+#      tags:
+#        - Query region telemetry
+#      parameters:
+#        - name: limit
+#          in: query            
+#          description: Number of telemetries to retrieve. Default 1, maximum 100.
+#          required: true
+#          schema:
+#            type: integer
+#          example: 10
+#        - name: services
+#          in: query            
+#          description: List (comma separated values) of application domain to retrieve.
+#          required: false
+#          schema:
+#            type: string         
+#        - name: providers
+#          in: query            
+#          description: List (comma separated values) of providers to retrieve.
+#          required: false
+#          schema:
+#            type: string
+#        - name: obs_properties
+#          in: query
+#          description: List (comma separated values) of the 'observedProperty' to retrieve.
+#          required: false
+#          schema:
+#            type: string
+#        - name: results
+#          in: query
+#          description: List (comma separated values) of results. Valid values= Weed, DeadPlant, WaterStress
+#          required: false
+#          schema:
+#            type: string
+#        - name: csv
+#          in: query
+#          description: "Results in CSV format."
+#          required: false
+#          schema:
+#            type: boolean  
+#      responses:
+#        '200':
+#          description: Successful Operation
+#        '405':
+#          description: Invalid input
+#        '500':
+#          description: Unexpected error      
+#
+#
+#  /getRegionTelemetry/historic/:
+#    get:
+#      summary: Retrieves the region-type observations in a time interval that meet specific filter conditions. If no filter conditions are specified, it retrieves a maximum of 100 observations.
+#      operationId: getHistoricRegionTelemetry
+#      tags:
+#        - Query region telemetry interval
+#      parameters:
+#        - name: start_time
+#          in: query            
+#          description: The start datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+#          required: true
+#          schema:
+#            type: string
+#          example: "2020-06-09"
+#        - name: end_time
+#          in: query            
+#          description: The end datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+#          required: false
+#          schema:
+#            type: string        
+#        - name: services
+#          in: query            
+#          description: List (comma separated values) of application domain to retrieve.
+#          required: false
+#          schema:
+#            type: string         
+#        - name: providers
+#          in: query            
+#          description: List (comma separated values) of providers to retrieve.
+#          required: false
+#          schema:
+#            type: string
+#        - name: obs_properties
+#          in: query
+#          description: List (comma separated values) of the 'observedProperty' to retrieve.
+#          required: false
+#          schema:
+#            type: string
+#        - name: results
+#          in: query
+#          description: List (comma separated values) of results. Valid values = Weed, DeadPlant, WaterStress
+#          required: false
+#          schema:
+#            type: string
+#        - name: csv
+#          in: query
+#          description: "Results in CSV format."
+#          required: false
+#          schema:
+#            type: boolean  
+#      responses:
+#        '200':
+#          description: Successful Operation
+#        '405':
+#          description: Invalid input
+#        '500':
+#          description: Unexpected error     
+
+
+  /getCollarTelemetry/latest/:
+    get:
+      summary: Retrieves the latest collar-type observations that meet specific filter conditions.
+      operationId: getLatestCollarTelemetry
+      tags:
+        - Query collar telemetry
+      parameters:
+        - name: limit
+          in: query            
+          description: Number of telemetries to retrieve. Default 1, maximum 100.
+          required: true
+          schema:
+            type: integer
+          example: 10
+        - name: entityNames
+          in: query            
+          description: List (comma separated values) of sensor identifier (entityName) to retrieve.
+          required: false
+          schema:
+            type: string        
+        - name: services
+          in: query            
+          description: List (comma separated values) of application domain to retrieve.
+          required: false
+          schema:
+            type: string  
+        - name: types
+          in: query            
+          description: List (comma separated values) of the type of measurements to retrieve.
+          required: false
+          schema:
+            type: string            
+        - name: providers
+          in: query            
+          description: List (comma separated values) of providers to retrieve.
+          required: false
+          schema:
+            type: string
+        - name: anomalies
+          in: query
+          description: List (comma separated values) of identified anomalies (true values). Valid values= activity, distance, location, position, temperature.
+          required: false
+          schema:
+            type: string
+        - name: alarm
+          in: query
+          description: Alarm detected. Valid values= true, false
+          required: false
+          schema:
+            type: string
+        - name: altitude
+          in: query
+          description: Mininum altitude of observations.
+          required: false
+          schema:
+            type: integer   
+        - name: order
+          in: query
+          description: "Temporal order: ascending (ASC) or descending (DESC). Default value: DESC."
+          required: false
+          schema:
+            type: string  
+        - name: csv
+          in: query
+          description: "Results in CSV format."
+          required: false
+          schema:
+            type: boolean  
+  
+      responses:
+        '200':
+          description: Successful Operation
+        '405':
+          description: Invalid input
+        '500':
+          description: Unexpected error  
+          
+  /getCollarTelemetry/historic/:
+    get:
+      summary: Retrieves the collar-type observations in a time interval that meet specific filter conditions. If no filter conditions are specified (other than 'altitude'), it retrieves a maximum of 100 observations.
+      operationId: getHistoricCollarTelemetry
+      tags:
+        - Query collar telemetry interval
+      parameters:
+        - name: start_time
+          in: query            
+          description: The start datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+          required: true
+          schema:
+            type: string
+          example: "2020-06-09"
+        - name: end_time
+          in: query            
+          description: The end datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+          required: false
+          schema:
+            type: string      
+        - name: entityNames
+          in: query            
+          description: List (comma separated values) of sensor identifier (entityName) to retrieve.
+          required: false
+          schema:
+            type: string        
+        - name: services
+          in: query            
+          description: List (comma separated values) of application domain to retrieve.
+          required: false
+          schema:
+            type: string  
+        - name: types
+          in: query            
+          description: List (comma separated values) of the type of measurements to retrieve.
+          required: false
+          schema:
+            type: string            
+        - name: providers
+          in: query            
+          description: List (comma separated values) of providers to retrieve.
+          required: false
+          schema:
+            type: string
+        - name: anomalies
+          in: query
+          description: List (comma separated values) of identified anomalies (true values). Valid values= activity, distance, location, position, temperature.
+          required: false
+          schema:
+            type: string
+        - name: alarm
+          in: query
+          description: Alarm detected. Valid values= true, false
+          required: false
+          schema:
+            type: string
+        - name: altitude
+          in: query
+          description: Mininum altitude of observations.
+          required: false
+          schema:
+            type: integer   
+        - name: order
+          in: query
+          description: "Temporal order: ascending (ASC) or descending (DESC). Default value: DESC."
+          required: false
+          schema:
+            type: string   
+        - name: csv
+          in: query
+          description: "Results in CSV format."
+          required: false
+          schema:
+            type: boolean    
+      responses:
+        '200':
+          description: Successful Operation
+        '405':
+          description: Invalid input
+        '500':
+          description: Unexpected error 
+
+
+  /getMeasurements/:
+    get:
+      summary: Returns a list of measurements for the database in a time interval. If not time interval is specified all measurements are returned.
+      operationId: getMeasurements
+      tags:
+        - Schema-measurement
+      
+      responses:
+        '200':
+          description: Successful Operation
+        '405':
+          description: Invalid input
+        '500':
+          description: Unexpected error 
+
+  /getObservationsBySensor/latest/:
+    get:
+      summary: Retrieves the latest telemetry from sensors that meet specific constraint.
+      operationId: getLatestObservationsBySensor
+      tags:
+        - Query sensor telemetry
+      parameters:
+        - name: limit
+          in: query            
+          description: Number of telemetries to retrieve by sensor. Default 1, maximum defined by services provider.
+          required: true
+          schema:
+            type: integer 
+          example: 10  
+        - name: entityNames
+          in: query            
+          description: List (comma separated values) of sensor identifier (entityName) to retrieve.
+          required: false
+          schema:
+            type: string
+        - name: devices
+          in: query            
+          description: List (comma separated values) of device identifier (device entityName) to retrieve.
+          required: false
+          schema:
+            type: string      
+        - name: services
+          in: query            
+          description: List (comma separated values) of application domain to retrieve.
+          required: false
+          schema:
+            type: string  
+        - name: types
+          in: query            
+          description: List (comma separated values) of the type of measurements to retrieve.
+          required: false
+          schema:
+            type: string            
+        - name: providers
+          in: query            
+          description: List (comma separated values) of providers to retrieve.
+          required: false
+          schema:
+            type: string
+        - name: measurements
+          in: query
+          description: List (comma separated values) of the measurements (observedProperty) to retrieve.
+          required: false
+          schema:
+            type: string
+        - name: altitude
+          in: query
+          description: Mininum altitude of observations.
+          required: false
+          schema:
+            type: integer   
+        - name: order
+          in: query
+          description: "Temporal order: ascending (ASC) or descending (DESC). Default value: DESC."
+          required: false
+          schema:
+            type: string     
+        - name: centr_long
+          in: query
+          description: "Proximity parameter - Centroid longitude: longitude of the centroid of the search area. To compute proximity based search, all proximity parameters are mandatories"
+          required: false
+          schema:
+            type: number    
+        - name: centr_lat
+          in: query
+          description: "Proximity parameter - Centroid latitude: latitude of the centroid of the search area. To compute proximity based search, all proximity parameters are mandatories"
+          required: false
+          schema:
+            type: number    
+        - name: radius
+          in: query
+          description: "Proximity parameter - Search radius expressed in meters. Maximun 1000 meters. To compute proximity based search, all proximity parameters are mandatories"
+          required: false
+          schema:
+            type: integer 
+        - name: csv
+          in: query
+          description: "Results in CSV format."
+          required: false
+          schema:
+            type: boolean  
+      responses:
+        '200':
+          description: Successful Operation
+        '405':
+          description: Invalid input
+        '500':
+          description: Unexpected error 
+
+  /getObservationsBySensor/historic/:
+    get:
+      summary: Retrieves the telemetry in a time interval from sensors that meet specific constraint. If no filter conditions are specified (other than 'altitude'), it retrieves a maximum of 100 observations per measurement.
+      operationId: getHistoricObservationsBySensor
+      tags:
+        - Query sensor telemetry interval
+      parameters:
+        - name: start_time
+          in: query            
+          description: The start datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+          required: true
+          schema:
+            type: string
+          example: "2020-06-09"
+        - name: end_time
+          in: query            
+          description: The end datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+          required: false
+          schema:
+            type: string   
+        - name: entityNames
+          in: query            
+          description: List (comma separated values) of sensor identifier (entityName) to retrieve.
+          required: false
+          schema:
+            type: string    
+        - name: devices
+          in: query            
+          description: List (comma separated values) of device identifier (device entityName) to retrieve.
+          required: false
+          schema:
+            type: string      
+        - name: services
+          in: query            
+          description: List (comma separated values) of application domain to retrieve.
+          required: false
+          schema:
+            type: string  
+        - name: types
+          in: query            
+          description: List (comma separated values) of the type of measurements to retrieve.
+          required: false
+          schema:
+            type: string            
+        - name: providers
+          in: query            
+          description: List (comma separated values) of providers to retrieve.
+          required: false
+          schema:
+            type: string
+        - name: measurements
+          in: query
+          description: List (comma separated values) of the measurements (observedProperty) to retrieve.
+          required: false
+          schema:
+            type: string
+        - name: altitude
+          in: query
+          description: Mininum altitude of observations.
+          required: false
+          schema:
+            type: integer   
+        - name: order
+          in: query
+          description: "Temporal order: ascending (ASC) or descending (DESC). Default value: DESC."
+          required: false
+          schema:
+            type: string     
+        - name: csv
+          in: query
+          description: "Results in CSV format."
+          required: false
+          schema:
+            type: boolean  
+      responses:
+        '200':
+          description: Successful Operation
+        '405':
+          description: Invalid input
+        '500':
+          description: Unexpected error 
+
+  /getObservationsByCollar/latest/:
+    get:
+      summary: Retrieves the latest telemetry from collars that meet specific constraint.
+      operationId: getLatestCollarTelemetry
+      tags:
+        - Query collar telemetry
+      parameters:
+        - name: limit
+          in: query            
+          description: Number of telemetries to retrieve. Default 1, maximum defined by services provider.
+          required: true
+          schema:
+            type: integer    
+          example: 10
+        - name: entityNames
+          in: query            
+          description: List (comma separated values) of sensor identifier (entityName) to retrieve.
+          required: false
+          schema:
+            type: string    
+        - name: services
+          in: query            
+          description: List (comma separated values) of application domain to retrieve.
+          required: false
+          schema:
+            type: string  
+        - name: types
+          in: query            
+          description: List (comma separated values) of the type of measurements to retrieve.
+          required: false
+          schema:
+            type: string            
+        - name: providers
+          in: query            
+          description: List (comma separated values) of providers to retrieve.
+          required: false
+          schema:
+            type: string
+        - name: anomalies
+          in: query
+          description: "List (comma separated values) of identified anomalies (true values). Valid values: activity, distance, location, position, temperature."
+          required: false
+          schema:
+            type: string
+        - name: alarm
+          in: query
+          description: "Alarm detected. Values: true, false."
+          required: false
+          schema:
+            type: string 
+        - name: altitude
+          in: query
+          description: Mininum altitude of observations.
+          required: false
+          schema:
+            type: integer   
+        - name: order
+          in: query
+          description: "Temporal order: ascending (ASC) or descending (DESC). Default value: DESC."
+          required: false
+          schema:
+            type: string     
+        - name: centr_long
+          in: query
+          description: "Proximity parameter - Centroid longitude: longitude of the centroid of the search area. To compute proximity based search, all proximity parameters are mandatories"
+          required: false
+          schema:
+            type: number    
+        - name: centr_lat
+          in: query
+          description: "Proximity parameter - Centroid latitude: latitude of the centroid of the search area. To compute proximity based search, all proximity parameters are mandatories"
+          required: false
+          schema:
+            type: number    
+        - name: radius
+          in: query
+          description: "Proximity parameter - Search radius expressed in meters. Maximun 1000 meters. To compute proximity based search, all proximity parameters are mandatories"
+          required: false
+          schema:
+            type: integer 
+        - name: csv
+          in: query
+          description: "Results in CSV format."
+          required: false
+          schema:
+            type: boolean  
+      responses:
+        '200':
+          description: Successful Operation
+        '405':
+          description: Invalid input
+        '500':
+          description: Unexpected error 
+
+  /getObservationsByCollar/historic/:
+    get:
+      summary: Retrieves the telemetry in a time interval form collars that meet specific constraint. If no filter conditions are specified (other than 'altitude'), it retrieves a maximum of 100 observations.
+      operationId: getHistoricCollarTelemetry
+      tags:
+        - Query collar telemetry interval
+      parameters:
+        - name: start_time
+          in: query            
+          description: The start datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+          required: true
+          schema:
+            type: string
+          example: "2020-06-09"
+        - name: end_time
+          in: query            
+          description: The end datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+          required: false
+          schema:
+            type: string      
+        - name: entityNames
+          in: query            
+          description: List (comma separated values) of sensor identifier (entityName) to retrieve.
+          required: false
+          schema:
+            type: string    
+        - name: services
+          in: query            
+          description: List (comma separated values) of application domain to retrieve.
+          required: false
+          schema:
+            type: string  
+        - name: types
+          in: query            
+          description: List (comma separated values) of the type of measurements to retrieve.
+          required: false
+          schema:
+            type: string            
+        - name: providers
+          in: query            
+          description: List (comma separated values) of providers to retrieve.
+          required: false
+          schema:
+            type: string
+        - name: anomalies
+          in: query
+          description: "List (comma separated values) of identified anomalies (true values). Valid values: activity, distance, location, position, temperature."
+          required: false
+          schema:
+            type: string
+        - name: alarm
+          in: query
+          description: "Alarm detected. Values: true, false."
+          required: false
+          schema:
+            type: string 
+        - name: altitude
+          in: query
+          description: Mininum altitude of observations.
+          required: false
+          schema:
+            type: integer   
+        - name: order
+          in: query
+          description: "Temporal order: ascending (ASC) or descending (DESC). Default value: DESC."
+          required: false
+          schema:
+            type: string    
+        - name: csv
+          in: query
+          description: "Results in CSV format."
+          required: false
+          schema:
+            type: boolean     
+      responses:
+        '200':
+          description: Successful Operation
+        '405':
+          description: Invalid input
+        '500':
+          description: Unexpected error 
+
+  /getStateVectors/latest/:
+    get:
+      summary: Retrieves the latest state vectors from vehicles that meet specific constraint.
+      operationId: getLatestStateVector
+      tags:
+        - Query vehicle's state vectors
+      parameters:
+        - name: limit
+          in: query            
+          description: Number of state vectors to retrieve. Default 1, maximum defined by services provider.
+          required: true
+          schema:
+            type: integer  
+          example: 10
+        - name: vehiclesId
+          in: query            
+          description: List (comma separated values) of vehicle identifier (vehicleId) to retrieve.
+          required: false
+          schema:
+            type: string   	   
+        - name: order
+          in: query            
+          description: Temporal order = ascending (ASC) or descending (DESC). Default value= DESC.
+          required: false
+          schema:
+            type: string     
+        - name: csv
+          in: query
+          description: "Results in CSV format."
+          required: false
+          schema:
+            type: boolean    
+      responses:
+        '200':
+          description: Successful Operation
+        '405':
+          description: Invalid input
+        '500':
+          description: Unexpected error 
+
+  /getStateVectors/historic/:
+    get:
+      summary: Retrieves a maximun of 100 state vector in a time interval from vehicles that meet specific constraint.
+      operationId: getHistoricStateVector
+      tags:
+        - Query vehicle's state vectors interval
+      parameters:
+        - name: start_time
+          in: query            
+          description: The start datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+          required: true
+          schema:
+            type: string
+          example: "2020-06-09"
+        - name: end_time
+          in: query            
+          description: The end datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+          required: false
+          schema:
+            type: string  
+        - name: vehiclesId
+          in: query            
+          description: List (comma separated values) of vehicle identifier (vehicleId) to retrieve.
+          required: false
+          schema:
+            type: string    	   
+        - name: order
+          in: query            
+          description: Temporal order = ascending (ASC) or descending (DESC). Default value= DESC.
+          required: false
+          schema:
+            type: string  
+        - name: csv
+          in: query
+          description: "Results in CSV format."
+          required: false
+          schema:
+            type: boolean    
+      responses:
+        '200':
+          description: Successful Operation
+        '405':
+          description: Invalid input
+        '500':
+          description: Unexpected error 
+
+  /getStateVectorsByVehicle/latest/:
+    get:
+      summary: Retrieves the latest state vectors from vehicles that meet specific constraint.
+      operationId: getLatestStateVectorsByVehicle
+      tags:
+        - Query vehicle's state vectors
+      parameters:
+        - name: limit
+          in: query            
+          description: Number of state vectors to retrieve. Default 1, maximum defined by services provider.
+          required: true
+          schema:
+            type: integer  
+          example: 10
+        - name: vehiclesId
+          in: query            
+          description: List (comma separated values) of vehicle identifier (vehicleId) to retrieve.
+          required: false
+          schema:
+            type: string   	   
+        - name: order
+          in: query            
+          description: Temporal order = ascending (ASC) or descending (DESC). Default value= DESC.
+          required: false
+          schema:
+            type: string    
+        - name: centr_long
+          in: query
+          description: "Proximity parameter - Centroid longitude: longitude of the centroid of the search area. To compute proximity based search, all proximity parameters are mandatories"
+          required: false
+          schema:
+            type: number    
+        - name: centr_lat
+          in: query
+          description: "Proximity parameter - Centroid latitude: latitude of the centroid of the search area. To compute proximity based search, all proximity parameters are mandatories"
+          required: false
+          schema:
+            type: number    
+        - name: radius
+          in: query
+          description: "Proximity parameter - Search radius expressed in meters. Maximun 1000 meters. To compute proximity based search, all proximity parameters are mandatories"
+          required: false
+          schema:
+            type: integer     
+        - name: csv
+          in: query
+          description: "Results in CSV format."
+          required: false
+          schema:
+            type: boolean  
+      responses:
+        '200':
+          description: Successful Operation
+        '405':
+          description: Invalid input
+        '500':
+          description: Unexpected error 
+
+  /getStateVectorsByVehicle/historic/:
+    get:
+      summary: Retrieves a maximun of 100 state vector in a time interval from vehicles that meet specific constraint.
+      operationId: getHistoricStateVectorsByVehicle
+      tags:
+        - Query vehicle's state vectors interval
+      parameters:
+        - name: start_time
+          in: query            
+          description: The start datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+          required: true
+          schema:
+            type: string
+          example: "2020-06-09"
+        - name: end_time
+          in: query            
+          description: The end datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+          required: false
+          schema:
+            type: string  
+        - name: vehiclesId
+          in: query            
+          description: List (comma separated values) of vehicle identifier (vehicleId) to retrieve.
+          required: false
+          schema:
+            type: string    	   
+        - name: order
+          in: query            
+          description: Temporal order = ascending (ASC) or descending (DESC). Default value= DESC.
+          required: false
+          schema:
+            type: string   
+        - name: csv
+          in: query
+          description: "Results in CSV format."
+          required: false
+          schema:
+            type: boolean   
+      responses:
+        '200':
+          description: Successful Operation
+        '405':
+          description: Invalid input
+        '500':
+          description: Unexpected error 
+
+
+#  /sensor/querySensorData/:
+#    get:
+#      summary: Retrieves the telemetry in a time interval form sensors that meet specific constraint. If no filter conditions are specified (other than 'altitude'), it retrieves a maximum of 100 observations per measurement.
+#      operationId: querySensorData
+#      tags:
+#        - Methods under development
+#      parameters:
+#        - name: requestId
+#          in: query            
+#          description: The identifier of the desired request
+#          required: false
+#          schema:
+#            type: string
+#        - name: region
+#          in: query            
+#          description: The identifier of a region that contains a series of measurmenets from sensors.
+#          required: false
+#          schema:
+#            type: string   	   
+#        - name: start_time
+#          in: query            
+#          description: The start datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+#          required: false
+#          schema:
+#            type: string        
+#        - name: end_time
+#          in: query            
+#          description: The end datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+#          required: false
+#          schema:
+#            type: string  
+#        - name: sensorType
+#          in: query            
+#          description: The desired sensor type.
+#          required: false
+#          schema:
+#            type: string  
+#      responses:
+#        '200':
+#          description: Successful Operation
+#        '405':
+#          description: Invalid input
+#        '500':
+#          description: Unexpected error 
+#
+#  /sensor/queryHistoricalSensorData/:
+#    get:
+#      summary: Retrieves the telemetry in a time interval form sensors that meet specific constraint. If no filter conditions are specified (other than 'altitude'), it retrieves a maximum of 100 observations per measurement.
+#      operationId: queryHistoricalSensorData
+#      tags:
+#        - Methods under development
+#      parameters:
+#        - name: requestId
+#          in: query            
+#          description: The identifier of the desired request
+#          required: false
+#          schema:
+#            type: string
+#        - name: region
+#          in: query            
+#          description: The identifier of a region that contains a series of measurmenets from sensors.
+#          required: false
+#          schema:
+#            type: string   	   
+#        - name: start_time
+#          in: query            
+#          description: The start datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+#          required: false
+#          schema:
+#            type: string        
+#        - name: end_time
+#          in: query            
+#          description: The end datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+#          required: false
+#          schema:
+#            type: string  
+#        - name: sensorType
+#          in: query            
+#          description: The desired sensor type.
+#          required: false
+#          schema:
+#            type: string  
+#      responses:
+#        '200':
+#          description: Successful Operation
+#        '405':
+#          description: Invalid input
+#        '500':
+#          description: Unexpected error 
+#
+#  /sensor/querySensorLastListData/:
+#    get:
+#      summary: Retrieves the telemetry in a time interval form sensors that meet specific constraint. If no filter conditions are specified (other than 'altitude'), it retrieves a maximum of 100 observations per measurement.
+#      operationId: querySensorLastListData
+#      tags:
+#        - Methods under development
+#      parameters:
+#        - name: requestId
+#          in: query            
+#          description: The identifier of the desired request
+#          required: false
+#          schema:
+#            type: string
+#        - name: region
+#          in: query            
+#          description: The identifier of a region that contains a series of measurmenets from sensors.
+#          required: false
+#          schema:
+#            type: string   	   
+#        - name: start_time
+#          in: query            
+#          description: The start datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+#          required: false
+#          schema:
+#            type: string        
+#        - name: end_time
+#          in: query            
+#          description: The end datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+#          required: false
+#          schema:
+#            type: string  
+#        - name: sensorType
+#          in: query            
+#          description: The desired sensor type.
+#          required: false
+#          schema:
+#            type: string  
+#      responses:
+#        '200':
+#          description: Successful Operation
+#        '405':
+#          description: Invalid input
+#        '500':
+#          description: Unexpected error 
+#
+#  /sensor/querySensorListData/:
+#    get:
+#      summary: Retrieves the telemetry in a time interval form sensors that meet specific constraint. If no filter conditions are specified (other than 'altitude'), it retrieves a maximum of 100 observations per measurement.
+#      operationId: querySensorListData
+#      tags:
+#        - Methods under development
+#      parameters:
+#        - name: requestId
+#          in: query            
+#          description: The identifier of the desired request
+#          required: false
+#          schema:
+#            type: string
+#        - name: region
+#          in: query            
+#          description: The identifier of a region that contains a series of measurmenets from sensors.
+#          required: false
+#          schema:
+#            type: string   	   
+#        - name: start_time
+#          in: query            
+#          description: The start datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+#          required: false
+#          schema:
+#            type: string        
+#        - name: end_time
+#          in: query            
+#          description: The end datetime of the interval time. Valid formats= yyyy-MM-dd HH:mm and yyyy-MM-dd.
+#          required: false
+#          schema:
+#            type: string  
+#        - name: sensorType
+#          in: query            
+#          description: The desired sensor type.
+#          required: false
+#          schema:
+#            type: string  
+#      responses:
+#        '200':
+#          description: Successful Operation
+#        '405':
+#          description: Invalid input
+#        '500':
+#          description: Unexpected error 
+#
+#  /conf/logs:
+#    get:
+#      summary: Logs from specific component
+#      operationId: getLogs
+#      tags:
+#        - Logs
+#     
+#      responses:
+#        '200':
+#          description: An array of data from an specific vehicle
+#        '405':
+#          description: Error in operation
+
+
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+
+    RegionListSchema:
+      type: object
+      title: The Root Schema
+      required:
+        - componentId
+        - sequenceNumber
+        - regions
+      properties:
+        componentId:
+          type: string
+          title: The Componentid Schema
+          default: ''
+          pattern: 'urn:afc(:[^:]+){4}'
+        sequenceNumber:
+          type: integer
+          title: The Sequencenumber Schema
+          default: 0
+        regions:
+          type: array
+          title: The Regions Schema
+          items:
+            type: object
+            title: The Items Schema
+            required:
+              - observedProperty
+              - result
+              - resultTime
+              - locationDimension
+            properties:
+              observedProperty:
+                type: string
+                title: The Observedproperty Schema
+                default: ''
+                pattern: ^(.*)$
+              result:
+                type: string
+                title: The Result Schema
+                default: ''
+                pattern: ^(.*)$
+              resultTime:
+                type: integer
+                title: The Resulttime Schema
+                default: 0
+              locationDimension:
+                type: object
+                title: The Locationdimension Schema
+                required:
+                  - nPoints
+                  - latCoordinates
+                  - lonCoordinates
+                properties:
+                  nPoints:
+                    type: integer
+                    title: The Npoints Schema
+                    default: 0
+                  latCoordinates:
+                    type: array
+                    title: The Latcoordinates Schema
+                    items:
+                      type: number
+                      title: The Items Schema
+                      default: 0
+                  lonCoordinates:
+                    type: array
+                    title: The Loncoordinates Schema
+                    items:
+                      type: number
+                      title: The Items Schema
+                      default: 0
+      
+    
+    RegionSchema:
+      type: object
+      title: The Root Schema
+      required:
+        - componentId
+        - sequenceNumber
+        - region
+      properties:
+        componentId:
+          type: string
+          title: The Componentid Schema
+          default: ''
+          pattern: 'urn:afc(:[^:]+){4}'
+        sequenceNumber:
+          type: integer
+          title: The Sequencenumber Schema
+          default: 0
+        region:
+          type: object
+          title: The Region Schema
+          required:
+            - observedProperty
+            - result
+            - resultTime
+            - locationDimension
+          properties:
+            observedProperty:
+              type: string
+              title: The Observedproperty Schema
+              default: ''
+              pattern: ^(.*)$
+            result:
+              type: string
+              title: The Result Schema
+              default: ''
+              pattern: ^(.*)$
+            resultTime:
+              type: integer
+              title: The Resulttime Schema
+              default: 0
+            locationDimension:
+              type: object
+              title: The Locationdimension Schema
+              required:
+                - nPoints
+                - latCoordinates
+                - lonCoordinates
+              properties:
+                nPoints:
+                  type: integer
+                  title: The Npoints Schema
+                  default: 0
+                latCoordinates:
+                  type: array
+                  title: The Latcoordinates Schema
+                  items:
+                    type: number
+                    title: The Items Schema
+                    default: 0
+                lonCoordinates:
+                  type: array
+                  title: The Loncoordinates Schema
+                  items:
+                    type: number
+                    title: The Items Schema
+                    default: 0
+      
+    VariousMfromMulti-sensor:  
+      type: object
+      title: The Schema for several measurements of the same resource
+      required:
+        - resourceId
+        - sequenceNumber
+        - location
+        - observations
+      properties:
+        resourceId:
+          type: string
+          title: The Resourceid
+          default: ''
+          example: 'urn:afc:AS12:service:provider:sensorType:entityName'
+          pattern: 'urn:afc(:[^:]+){5}'
+        sequenceNumber:
+          type: integer
+          title: Sequence number
+          default: 0
+        location:
+          type: object
+          title: The Location object
+          required:
+            - latitude
+            - longitude
+            - altitude
+          properties:
+            latitude:
+              type: number
+              title: Latitude
+              default: 0
+            longitude:
+              type: number
+              title: Longitude
+              default: 0
+            altitude:
+              type: number
+              title: Altitude
+              default: 0
+          additionalProperties: false
+        observations:
+          type: array
+          title: Observations array
+          items:
+            type: object
+            title: The Items Schema
+            required:
+              - observedProperty
+              - resultTime
+              - result
+            properties:
+              observedProperty:
+                type: string
+                title: The Observed property
+                default: ''
+              resultTime:
+                type: integer
+                title: Result time
+                default: 0
+              result:
+                type: object
+                title: The Result Schema
+                required:
+                  - value
+                  - uom
+                properties:
+                  value:
+                    type: number
+                    title: The Result Value
+                    default: 0
+                  uom:
+                    type: string
+                    title: The Unity of Measure
+                    default: ''
+                additionalProperties: false
+      additionalProperties: false
+
+  
+    AggregationMeasurementsGatewaySchema:
+      type: object
+      title: The Schema for Aggregation of Measurements through a Gateway
+      required:
+        - deviceId
+        - sequence number
+        - location
+        - observations
+      additionalProperties: false
+      properties:
+        deviceId:
+          type: string
+          title: The Device id
+          default: ''
+          pattern: 'urn:afc(:[^:]+){5}'
+          example: "urn:afc:AS12:environmentalObservations:TST:airSensor:airTemperatureSensor0012"
+        sequence number:
+          type: integer
+          title: Sequence number
+          default: 0
+        location:
+          type: object
+          title: The Location Schema
+          required:
+            - latitude
+            - longitude
+            - altitude
+          additionalProperties: false
+          properties:
+            latitude:
+              type: number
+              title: Latitude
+              default: 0
+            longitude:
+              type: number
+              title: Longitude
+              default: 0
+            altitude:
+              type: number
+              title: Altitude
+              default: 0
+        observations:
+          type: array
+          title: The Observations Schema
+          minItems: 1
+          items:
+            type: object
+            title: The sensors or resources
+            required:
+              - resourceId
+              - observedProperty
+              - resultTime
+              - result
+            additionalProperties: false
+            properties:
+              resourceId:
+                type: string
+                title: Resourceid
+                default: ''
+                pattern: 'urn:afc(:[^:]+){5}'
+                example: "urn:afc:AS12:environmentalObservations:TST:airSensor:airTemperatureSensor0012"
+              observedProperty:
+                type: string
+                title: Observed property
+                default: ''
+              resultTime:
+                type: integer
+                title: Result time
+                default: 0
+              result:
+                type: object
+                title: The Result Schema
+                required:
+                  - value
+                  - uom
+                additionalProperties: false
+                properties:
+                  value:
+                    type: number
+                    title: The result value
+                    default: 0
+                  uom:
+                    type: string
+                    title: The Uom Schema
+                    default: ''
+      
+    
+    SensorAccumulatedMeasurements:
+      type: object
+      title: The Schema for several measurements of the same resource (complete version)
+      required:
+        - resourceId
+        - location
+        - sequenceNumber
+        - observedProperty
+        - uom
+        - observations
+      additionalProperties: false
+      properties:
+        resourceId:
+          type: string
+          title: The Resourceid
+          default: '' 
+          pattern: 'urn:afc(:[^:]+){5}'
+          example: "urn:afc:AS12:environmentalObservations:TST:airSensor:airTemperatureSensor0012"
+        sequenceNumber:
+          type: integer
+          title: Sequence number
+          default: 0
+        location:
+          type: object
+          title: The Location Schema
+          required:
+            - latitude
+            - longitude
+            - altitude
+          additionalProperties: false
+          properties:
+            latitude:
+              type: number
+              title: Latitude
+              default: 0
+            longitude:
+              type: number
+              title: Longitude
+              default: 0
+            altitude:
+              type: number
+              title: Altitude
+              default: 0
+        observedProperty:
+          type: string
+          title: The Observed property
+          default: ''
+        uom:
+          type: string
+          title: Unity of measure
+          default: ''
+        observations:
+          type: array
+          title: Observations array
+          minItems: 1
+          items:
+            type: object
+            title: The Items Schema
+            required:
+              - resultTime
+              - result
+            additionalProperties: false
+            properties:
+              resultTime:
+                type: integer
+                title: Result time
+                default: 0
+              result:
+                type: object
+                title: The Result schema
+                required:
+                  - value
+                additionalProperties: false
+                properties:
+                  value:
+                    type: number
+                    title: The Value of result
+                    default: 0
+
+
+    SimpleMeasure:
+      type: object
+      title: The Schema for a Simple Measurement
+      required:
+        - resourceId
+        - sequenceNumber
+        - location
+        - observedProperty
+        - resultTime
+        - result
+      properties:
+        resourceId:
+          type: string
+          title: The ResourceId
+          default: ''
+          pattern: 'urn:afc(:[^:]+){5}'
+        sequenceNumber:
+          type: integer
+          title: The Sequence number
+          default: 0
+        location:
+          type: object
+          title: The Location object
+          required:
+            - latitude
+            - longitude
+            - altitude
+          properties:
+            latitude:
+              type: number
+              title: Latitude
+              default: 0
+            longitude:
+              type: number
+              title: Longitude
+              default: 0
+            altitude:
+              type: number
+              title: Altitude
+              default: 0
+          additionalProperties: false
+        observedProperty:
+          type: string
+          title: The Observed Property
+          default: ''
+        resultTime:
+          type: integer
+          title: The Result time
+          default: 0
+        result:
+          type: object
+          title: The Result Schema
+          required:
+            - value
+            - uom
+          properties:
+            value:
+              type: number
+              title: The Result Value
+              default: 0
+            uom:
+              type: string
+              title: The Unity of Measure
+              default: ''
+          additionalProperties: false
+      additionalProperties: false
+        
+        
+    CollarSchema:    
+      type: object
+      title: The Schema for a Collar Measure
+      properties:
+        sequenceNumber:
+          type: integer
+          title: The Sequence Number
+          default: 0
+        collar:
+          type: object
+          properties:
+            resourceId:
+              type: string
+              title: The ResourceId
+              default: ''
+            location:
+              type: object
+              title: The Location Schema
+              $ref: 'http://localhost:9124/dataAccessManager/openapi.yaml#/components/schemas/location'
+            resultTime:
+              type: integer
+              title: The Result time
+              default: 0
+            resourceAlarm:
+              type: boolean
+            anomalies:
+              type: object
+              properties:
+                locationAnomaly:
+                  type: boolean
+                temperatureAnomaly:
+                  type: boolean
+                distanceAnomaly:
+                  type: boolean
+                activityAnomaly:
+                  type: boolean
+                positionAnomaly:
+                  type: boolean
+              additionalProperties: false
+              required:
+                - locationAnomaly
+                - temperatureAnomaly
+                - distanceAnomaly
+                - activityAnomaly
+                - positionAnomaly
+            acceleration:
+              type: object
+              properties:
+                accX:
+                  type: number
+                accY:
+                  type: number
+                accZ:
+                  type: number
+              additionalProperties: false
+              required:
+                - accX
+                - accY
+                - accZ
+            temperature:
+              type: number
+          additionalProperties: false
+          required:
+            - resourceId
+            - location
+            - resultTime
+            - resourceAlarm
+            - anomalies
+            - acceleration
+            - temperature
+      additionalProperties: false
+      required:
+        - collar
+
+    StateVectorSchema_Complete:
+      type: object
+      description: 'StateVector, position and battery: periodic information about vehicle state.'
+      default: {}
+      required:
+        - vehicleId
+        - sequenceNumber
+        - lastUpdate
+      additionalProperties: true
+      properties:
+        vehicleId:
+          type: integer
+          description: Vehicle identifier.
+        sequenceNumber:
+          type: integer
+          description: Sequence number.
+        location:
+          $ref: 'http://localhost:9124/dataAccessManager/openapi.yaml#/components/schemas/location'
+        orientation:
+          $ref: 'http://localhost:9124/dataAccessManager/openapi.yaml#/components/schemas/orientation'
+        battery:
+          $ref: 'http://localhost:9124/dataAccessManager/openapi.yaml#/components/schemas/battery'
+        linearSpeed:
+          type: integer
+          description: Vehicle linear speed.
+        lastUpdate:
+          type: integer
+          description: Last update (epoch time in seconds).
+
+    orientation:
+      type: object
+      description: 'Euler angles: intrinsic rotations.'
+      required:
+        - roll
+        - pitch
+        - yaw
+      additionalProperties: false
+      properties:
+        roll:
+          type: number
+          description: 'Roll rotation: gives the bank angle.'
+        pitch:
+          type: number
+          description: 'Pitch rotation: gives the elevation angle.'
+        yaw:
+          type: number
+          description: 'Yaw rotation: gives the bearing angle.'
+    battery:
+      type: object
+      description: Battery information.
+      required:
+        - batteryCapacity
+        - batteryPercentage
+      additionalProperties: false
+      properties:
+        batteryCapacity:
+          type: number
+          description: Capacity in Ah (last full capcity).
+        batteryPercentage:
+          type: number
+          description: Charge percentage on 0 to 1 range.
+      
+    
+    CollarListSchema:
+      type: object
+      title: The Schema for a Collar List of Measures
+      properties:
+        sequenceNumber:
+          type: integer
+          title: The Sequence Number
+          default: 0
+        collars:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            properties:
+              resourceId:
+                type: string
+                title: The ResourceId
+                default: ''
+              location:
+                type: object
+                title: The Location Schema
+                $ref: 'http://localhost:9124/dataAccessManager/openapi.yaml#/components/schemas/location'
+              resultTime:
+                type: integer
+                title: The Result time
+                default: 0
+              resourceAlarm:
+                type: boolean
+              anomalies:
+                type: object
+                properties:
+                  locationAnomaly:
+                    type: boolean
+                  temperatureAnomaly:
+                    type: boolean
+                  distanceAnomaly:
+                    type: boolean
+                  activityAnomaly:
+                    type: boolean
+                  positionAnomaly:
+                    type: boolean
+                additionalProperties: false
+                required:
+                  - locationAnomaly
+                  - temperatureAnomaly
+                  - distanceAnomaly
+                  - activityAnomaly
+                  - positionAnomaly
+              acceleration:
+                type: object
+                properties:
+                  accX:
+                    type: number
+                  accY:
+                    type: number
+                  accZ:
+                    type: number
+                additionalProperties: false
+                required:
+                  - accX
+                  - accY
+                  - accZ
+              temperature:
+                type: number
+            additionalProperties: false
+            required:
+              - resourceId
+              - location
+              - resultTime
+              - resourceAlarm
+              - anomalies
+              - acceleration
+              - temperature
+      additionalProperties: false
+      required:
+        - collars     
+
+    location:
+      type: object
+      title: The Location object
+      required:
+        - latitude
+        - longitude
+        - altitude
+      properties:
+        latitude:
+          type: number
+          title: Latitude
+          default: 0
+        longitude:
+          type: number
+          title: Longitude
+          default: 0
+        altitude:
+          type: number
+          title: Altitude
+          default: 0
+      additionalProperties: false      
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    measurestore_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://afcnrdbmanager.swagger.io/oauth/dialog
+          scopes:
+            write:measures: modify measures in DataBase
+            read:measures: read mesures from DataBase
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
