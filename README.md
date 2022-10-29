@@ -26,6 +26,16 @@ The DQ functionality described by the component offers the possibility of data d
 
 ![tabla](https://user-images.githubusercontent.com/60104587/198830010-f3513a31-e016-498f-9eb0-22b6a29415f7.png)
 
+# References
+- [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7263254.svg)](https://doi.org/10.5281/zenodo.7263254)
+
+# License
+Parts copyrighted by Universidad Politécnica de Madrid (UPM) are distributed under a dual license scheme:
+- For academic uses: Licensed under GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+- For any other use: Licensed under the Apache License, Version 2.0.
+Parts copyrighted by DEMANES are distributed under the Apache License, Version 2.0.
+
+For further details on the license, please refer to the [License](LICENSE.md) file.
 
 ## Source Code:
 
