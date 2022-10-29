@@ -1,0 +1,1 @@
+Aquí se debe incluir el certificado para la configuración del servicio sobre TLS/SSL
