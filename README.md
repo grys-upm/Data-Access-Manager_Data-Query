@@ -33,7 +33,7 @@ The DQ functionality described by the component offers the possibility of data d
 Parts copyrighted by Universidad Politécnica de Madrid (UPM) are distributed under a dual license scheme:
 - For academic uses: Licensed under GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 - For any other use: Licensed under the Apache License, Version 2.0.
-Parts copyrighted by DEMANES are distributed under the Apache License, Version 2.0.
+Parts copyrighted by AFarCloud are distributed under the Apache License, Version 2.0.
 
 For further details on the license, please refer to the [License](LICENSE.md) file.
 
