@@ -14,7 +14,8 @@ In order to provide an agile response to data injection and retribution requests
 Following figure depicts the simplified structure of the different access points offered by the DAM & DQ and their interaction with the databases.
 
 
-![DAM estructura](https://user-images.githubusercontent.com/60104587/198829875-532b6c6e-88d3-4d4d-9df4-ac0125592f28.png)
+
+![DAM DQ](https://user-images.githubusercontent.com/60104587/199558308-97e40fbd-4643-455f-91f1-8f458d1bcc5c.png)
 
 
 DAM & DQ component offers two types of interfaces or protocols for its operation. On the one hand, the REST interface is offered from which any type of data injection or gathering request can be made through the HTTP protocol. On the other hand, the Thrift interface allows communication with the component through the deployment of a client in the component, device or application that wishes to establish communication. The purpose of offering both interfaces for the use of the various functionalities offered by the component is to integrate with various equipment with different capabilities and resources. Both protocols offer the possibility of using different programming languages for the implementation of the client, without the need to adapt to the language used in the DAM & DQ.
